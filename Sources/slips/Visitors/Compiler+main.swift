@@ -17,12 +17,15 @@ extension Compiler {
 			isVarArg: false
 		)
 
-		let main = LLVM.Function(type: mainType, environment: .init())
+		let environment = LLVM.Function.Environment(name: "main")
+		let main = LLVM.Function(type: mainType, environment: environment)
 
-		_ = builder.define(main, parameterNames: []) {
-			if let retval = body() as? LLVM.IRValueRef {
-				builder.emit(return: .raw(retval.ref))
-			}
+		var retval: (any LLVM.IRValueRef)?
+
+		builder.define(main, parameterNames: [], environment: environment) {
+			retval = body() as? LLVM.IRValueRef
 		}
+
+		builder.emit(return: .raw(retval!.ref))
 	}
 }

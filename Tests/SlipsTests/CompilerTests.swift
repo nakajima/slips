@@ -53,6 +53,14 @@ struct CompilerTests {
 		""").run() == .int(4))
 	}
 
+	@Test("Basic closure") func closure() {
+		#expect(Compiler("""
+		(def x (y in (z in (+ y z))))
+		(def add (x 1))
+		(add 2)
+		""").run() == .int(3))
+	}
+
 	@Test("Evaluates nested scopes") func nestedScopes() {
 		#expect(Compiler("""
 		(

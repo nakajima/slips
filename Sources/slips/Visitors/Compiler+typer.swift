@@ -26,6 +26,10 @@ extension Compiler {
 			return context.environment.type(of: expr.name) ?? .i1 // TODO: Do better
 		case is AddExpr:
 			return .i32
+		case let expr as DefExpr:
+			return getTypeOf(expr: expr.expr, context: context)
+		case let expr as CallExpr:
+			return getTypeOf(expr: expr.args[0], context: context)
 		default:
 			fatalError()
 		}
